@@ -1,0 +1,934 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","k8s-app":"event-exporter","kubernetes.io/cluster-service":"true","version":"v0.3.1"},"name":"event-exporter-gke","namespace":"kube-system"},"spec":{"replicas":1,"selector":{"matchLabels":{"k8s-app":"event-exporter"}},"template":{"metadata":{"annotations":{"components.gke.io/component-name":"event-exporter","components.gke.io/component-version":"1.0.6"},"labels":{"k8s-app":"event-exporter","version":"v0.3.1"}},"spec":{"containers":[{"command":["/event-exporter","-sink-opts=-stackdriver-resource-model=new -endpoint=https://logging.googleapis.com"],"image":"k8s.gcr.io/event-exporter:v0.3.1","name":"event-exporter"},{"command":["/monitor","--stackdriver-prefix=container.googleapis.com/internal/addons","--api-override=https://monitoring.googleapis.com/","--source=event_exporter:http://localhost:80?whitelisted=stackdriver_sink_received_entry_count,stackdriver_sink_request_count,stackdriver_sink_successfully_sent_entry_count","--pod-id=$(POD_NAME)","--namespace-id=$(POD_NAMESPACE)","--node-name=$(NODE_NAME)"],"env":[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}},{"name":"NODE_NAME","valueFrom":{"fieldRef":{"fieldPath":"spec.nodeName"}}}],"image":"gke.gcr.io/prometheus-to-sd:v0.10.0-gke.0","name":"prometheus-to-sd-exporter"}],"nodeSelector":{"kubernetes.io/os":"linux"},"serviceAccountName":"event-exporter-sa","terminationGracePeriodSeconds":120,"tolerations":[{"key":"components.gke.io/gke-managed-components","operator":"Exists"}],"volumes":[{"hostPath":{"path":"/etc/ssl/certs"},"name":"ssl-certs"}]}}}}
+    creationTimestamp: "2020-08-10T09:20:48Z"
+    generation: 1
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: event-exporter
+      kubernetes.io/cluster-service: "true"
+      version: v0.3.1
+    name: event-exporter-gke
+    namespace: kube-system
+    resourceVersion: "818"
+    selfLink: /apis/apps/v1/namespaces/kube-system/deployments/event-exporter-gke
+    uid: 9523fd8a-ba46-4a05-9741-72cf6af75e20
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        k8s-app: event-exporter
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          components.gke.io/component-name: event-exporter
+          components.gke.io/component-version: 1.0.6
+        creationTimestamp: null
+        labels:
+          k8s-app: event-exporter
+          version: v0.3.1
+      spec:
+        containers:
+        - command:
+          - /event-exporter
+          - -sink-opts=-stackdriver-resource-model=new -endpoint=https://logging.googleapis.com
+          image: k8s.gcr.io/event-exporter:v0.3.1
+          imagePullPolicy: IfNotPresent
+          name: event-exporter
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - command:
+          - /monitor
+          - --stackdriver-prefix=container.googleapis.com/internal/addons
+          - --api-override=https://monitoring.googleapis.com/
+          - --source=event_exporter:http://localhost:80?whitelisted=stackdriver_sink_received_entry_count,stackdriver_sink_request_count,stackdriver_sink_successfully_sent_entry_count
+          - --pod-id=$(POD_NAME)
+          - --namespace-id=$(POD_NAMESPACE)
+          - --node-name=$(NODE_NAME)
+          env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          - name: NODE_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: spec.nodeName
+          image: gke.gcr.io/prometheus-to-sd:v0.10.0-gke.0
+          imagePullPolicy: IfNotPresent
+          name: prometheus-to-sd-exporter
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          kubernetes.io/os: linux
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: event-exporter-sa
+        serviceAccountName: event-exporter-sa
+        terminationGracePeriodSeconds: 120
+        tolerations:
+        - key: components.gke.io/gke-managed-components
+          operator: Exists
+        volumes:
+        - hostPath:
+            path: /etc/ssl/certs
+            type: ""
+          name: ssl-certs
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2020-08-10T09:21:18Z"
+      lastUpdateTime: "2020-08-10T09:21:18Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2020-08-10T09:20:48Z"
+      lastUpdateTime: "2020-08-10T09:21:18Z"
+      message: ReplicaSet "event-exporter-gke-59b99fdd9c" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      components.gke.io/component-name: fluentd-scaler
+      components.gke.io/component-version: 1.0.1
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"components.gke.io/component-name":"fluentd-scaler","components.gke.io/component-version":"1.0.1"},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","k8s-app":"fluentd-gke-scaler"},"name":"fluentd-gke-scaler","namespace":"kube-system"},"spec":{"selector":{"matchLabels":{"k8s-app":"fluentd-gke-scaler"}},"template":{"metadata":{"annotations":{"components.gke.io/component-name":"fluentd-scaler","components.gke.io/component-version":"1.0.1"},"labels":{"k8s-app":"fluentd-gke-scaler"}},"spec":{"containers":[{"command":["/scaler.sh","--ds-name=fluentd-gke","--scaling-policy=fluentd-gcp-scaling-policy"],"env":[{"name":"CPU_REQUEST","value":"100m"},{"name":"MEMORY_REQUEST","value":"200Mi"},{"name":"CPU_LIMIT","value":"1"},{"name":"MEMORY_LIMIT","value":"500Mi"}],"image":"k8s.gcr.io/fluentd-gcp-scaler:0.5.2","name":"fluentd-gke-scaler"}],"serviceAccountName":"fluentd-gke-scaler","tolerations":[{"key":"components.gke.io/gke-managed-components","operator":"Exists"}]}}}}
+    creationTimestamp: "2020-08-10T09:20:51Z"
+    generation: 1
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: fluentd-gke-scaler
+    name: fluentd-gke-scaler
+    namespace: kube-system
+    resourceVersion: "693"
+    selfLink: /apis/apps/v1/namespaces/kube-system/deployments/fluentd-gke-scaler
+    uid: 7d33c759-fcb7-45d8-a13a-599291d9bbfb
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        k8s-app: fluentd-gke-scaler
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          components.gke.io/component-name: fluentd-scaler
+          components.gke.io/component-version: 1.0.1
+        creationTimestamp: null
+        labels:
+          k8s-app: fluentd-gke-scaler
+      spec:
+        containers:
+        - command:
+          - /scaler.sh
+          - --ds-name=fluentd-gke
+          - --scaling-policy=fluentd-gcp-scaling-policy
+          env:
+          - name: CPU_REQUEST
+            value: 100m
+          - name: MEMORY_REQUEST
+            value: 200Mi
+          - name: CPU_LIMIT
+            value: "1"
+          - name: MEMORY_LIMIT
+            value: 500Mi
+          image: k8s.gcr.io/fluentd-gcp-scaler:0.5.2
+          imagePullPolicy: IfNotPresent
+          name: fluentd-gke-scaler
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: fluentd-gke-scaler
+        serviceAccountName: fluentd-gke-scaler
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - key: components.gke.io/gke-managed-components
+          operator: Exists
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2020-08-10T09:21:06Z"
+      lastUpdateTime: "2020-08-10T09:21:06Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2020-08-10T09:20:51Z"
+      lastUpdateTime: "2020-08-10T09:21:06Z"
+      message: ReplicaSet "fluentd-gke-scaler-cd4d654d7" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","k8s-app":"kube-dns","kubernetes.io/cluster-service":"true"},"name":"kube-dns","namespace":"kube-system"},"spec":{"selector":{"matchLabels":{"k8s-app":"kube-dns"}},"strategy":{"rollingUpdate":{"maxSurge":"10%","maxUnavailable":0}},"template":{"metadata":{"annotations":{"scheduler.alpha.kubernetes.io/critical-pod":"","seccomp.security.alpha.kubernetes.io/pod":"runtime/default"},"labels":{"k8s-app":"kube-dns"}},"spec":{"containers":[{"args":["--domain=cluster.local.","--dns-port=10053","--config-dir=/kube-dns-config","--v=2"],"env":[{"name":"PROMETHEUS_PORT","value":"10055"}],"image":"k8s.gcr.io/k8s-dns-kube-dns-amd64:1.15.8","livenessProbe":{"failureThreshold":5,"httpGet":{"path":"/healthcheck/kubedns","port":10054,"scheme":"HTTP"},"initialDelaySeconds":60,"successThreshold":1,"timeoutSeconds":5},"name":"kubedns","ports":[{"containerPort":10053,"name":"dns-local","protocol":"UDP"},{"containerPort":10053,"name":"dns-tcp-local","protocol":"TCP"},{"containerPort":10055,"name":"metrics","protocol":"TCP"}],"readinessProbe":{"httpGet":{"path":"/readiness","port":8081,"scheme":"HTTP"},"initialDelaySeconds":3,"timeoutSeconds":5},"resources":{"limits":{"memory":"170Mi"},"requests":{"cpu":"100m","memory":"70Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true,"runAsGroup":1001,"runAsUser":1001},"volumeMounts":[{"mountPath":"/kube-dns-config","name":"kube-dns-config"}]},{"args":["-v=2","-logtostderr","-configDir=/etc/k8s/dns/dnsmasq-nanny","-restartDnsmasq=true","--","-k","--cache-size=1000","--no-negcache","--dns-forward-max=1500","--log-facility=-","--server=/cluster.local/127.0.0.1#10053","--server=/in-addr.arpa/127.0.0.1#10053","--server=/ip6.arpa/127.0.0.1#10053"],"image":"k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.15.8","livenessProbe":{"failureThreshold":5,"httpGet":{"path":"/healthcheck/dnsmasq","port":10054,"scheme":"HTTP"},"initialDelaySeconds":60,"successThreshold":1,"timeoutSeconds":5},"name":"dnsmasq","ports":[{"containerPort":53,"name":"dns","protocol":"UDP"},{"containerPort":53,"name":"dns-tcp","protocol":"TCP"}],"resources":{"requests":{"cpu":"150m","memory":"20Mi"}},"securityContext":{"capabilities":{"add":["NET_BIND_SERVICE","SETGID"],"drop":["all"]}},"volumeMounts":[{"mountPath":"/etc/k8s/dns/dnsmasq-nanny","name":"kube-dns-config"}]},{"args":["--v=2","--logtostderr","--probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local,5,SRV","--probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local,5,SRV"],"image":"k8s.gcr.io/k8s-dns-sidecar-amd64:1.15.8","livenessProbe":{"failureThreshold":5,"httpGet":{"path":"/metrics","port":10054,"scheme":"HTTP"},"initialDelaySeconds":60,"successThreshold":1,"timeoutSeconds":5},"name":"sidecar","ports":[{"containerPort":10054,"name":"metrics","protocol":"TCP"}],"resources":{"requests":{"cpu":"10m","memory":"20Mi"}},"securityContext":{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true,"runAsGroup":1001,"runAsUser":1001}},{"command":["/monitor","--source=kubedns:http://localhost:10054?whitelisted=probe_kubedns_latency_ms,probe_kubedns_errors,dnsmasq_misses,dnsmasq_hits","--stackdriver-prefix=container.googleapis.com/internal/addons","--api-override=https://monitoring.googleapis.com/","--pod-id=$(POD_NAME)","--namespace-id=$(POD_NAMESPACE)","--v=2"],"env":[{"name":"POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}],"image":"k8s.gcr.io/prometheus-to-sd:v0.4.2","name":"prometheus-to-sd","securityContext":{"allowPrivilegeEscalation":false,"readOnlyRootFilesystem":true,"runAsGroup":1001,"runAsUser":1001}}],"dnsPolicy":"Default","nodeSelector":{"beta.kubernetes.io/os":"linux"},"priorityClassName":"system-cluster-critical","securityContext":{"fsGroup":1001},"serviceAccountName":"kube-dns","tolerations":[{"key":"CriticalAddonsOnly","operator":"Exists"},{"key":"components.gke.io/gke-managed-components","operator":"Exists"}],"volumes":[{"configMap":{"name":"kube-dns","optional":true},"name":"kube-dns-config"}]}}}}
+    creationTimestamp: "2020-08-10T09:20:48Z"
+    generation: 2
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: kube-dns
+      kubernetes.io/cluster-service: "true"
+    name: kube-dns
+    namespace: kube-system
+    resourceVersion: "931"
+    selfLink: /apis/apps/v1/namespaces/kube-system/deployments/kube-dns
+    uid: 0fa5b106-54fa-43ce-9870-216dacfc2b53
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 2
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        k8s-app: kube-dns
+    strategy:
+      rollingUpdate:
+        maxSurge: 10%
+        maxUnavailable: 0
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          scheduler.alpha.kubernetes.io/critical-pod: ""
+          seccomp.security.alpha.kubernetes.io/pod: runtime/default
+        creationTimestamp: null
+        labels:
+          k8s-app: kube-dns
+      spec:
+        containers:
+        - args:
+          - --domain=cluster.local.
+          - --dns-port=10053
+          - --config-dir=/kube-dns-config
+          - --v=2
+          env:
+          - name: PROMETHEUS_PORT
+            value: "10055"
+          image: k8s.gcr.io/k8s-dns-kube-dns-amd64:1.15.8
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthcheck/kubedns
+              port: 10054
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: kubedns
+          ports:
+          - containerPort: 10053
+            name: dns-local
+            protocol: UDP
+          - containerPort: 10053
+            name: dns-tcp-local
+            protocol: TCP
+          - containerPort: 10055
+            name: metrics
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /readiness
+              port: 8081
+              scheme: HTTP
+            initialDelaySeconds: 3
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              memory: 170Mi
+            requests:
+              cpu: 100m
+              memory: 70Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsUser: 1001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /kube-dns-config
+            name: kube-dns-config
+        - args:
+          - -v=2
+          - -logtostderr
+          - -configDir=/etc/k8s/dns/dnsmasq-nanny
+          - -restartDnsmasq=true
+          - --
+          - -k
+          - --cache-size=1000
+          - --no-negcache
+          - --dns-forward-max=1500
+          - --log-facility=-
+          - --server=/cluster.local/127.0.0.1#10053
+          - --server=/in-addr.arpa/127.0.0.1#10053
+          - --server=/ip6.arpa/127.0.0.1#10053
+          image: k8s.gcr.io/k8s-dns-dnsmasq-nanny-amd64:1.15.8
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /healthcheck/dnsmasq
+              port: 10054
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: dnsmasq
+          ports:
+          - containerPort: 53
+            name: dns
+            protocol: UDP
+          - containerPort: 53
+            name: dns-tcp
+            protocol: TCP
+          resources:
+            requests:
+              cpu: 150m
+              memory: 20Mi
+          securityContext:
+            capabilities:
+              add:
+              - NET_BIND_SERVICE
+              - SETGID
+              drop:
+              - all
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/k8s/dns/dnsmasq-nanny
+            name: kube-dns-config
+        - args:
+          - --v=2
+          - --logtostderr
+          - --probe=kubedns,127.0.0.1:10053,kubernetes.default.svc.cluster.local,5,SRV
+          - --probe=dnsmasq,127.0.0.1:53,kubernetes.default.svc.cluster.local,5,SRV
+          image: k8s.gcr.io/k8s-dns-sidecar-amd64:1.15.8
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 5
+            httpGet:
+              path: /metrics
+              port: 10054
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: sidecar
+          ports:
+          - containerPort: 10054
+            name: metrics
+            protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 20Mi
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsUser: 1001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - command:
+          - /monitor
+          - --source=kubedns:http://localhost:10054?whitelisted=probe_kubedns_latency_ms,probe_kubedns_errors,dnsmasq_misses,dnsmasq_hits
+          - --stackdriver-prefix=container.googleapis.com/internal/addons
+          - --api-override=https://monitoring.googleapis.com/
+          - --pod-id=$(POD_NAME)
+          - --namespace-id=$(POD_NAMESPACE)
+          - --v=2
+          env:
+          - name: POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          image: k8s.gcr.io/prometheus-to-sd:v0.4.2
+          imagePullPolicy: IfNotPresent
+          name: prometheus-to-sd
+          resources: {}
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            runAsGroup: 1001
+            runAsUser: 1001
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: Default
+        nodeSelector:
+          beta.kubernetes.io/os: linux
+        priorityClassName: system-cluster-critical
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 1001
+        serviceAccount: kube-dns
+        serviceAccountName: kube-dns
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - key: components.gke.io/gke-managed-components
+          operator: Exists
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: kube-dns
+            optional: true
+          name: kube-dns-config
+  status:
+    availableReplicas: 2
+    conditions:
+    - lastTransitionTime: "2020-08-10T09:21:32Z"
+      lastUpdateTime: "2020-08-10T09:21:32Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2020-08-10T09:20:48Z"
+      lastUpdateTime: "2020-08-10T09:21:32Z"
+      message: ReplicaSet "kube-dns-56d8cd994f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 2
+    replicas: 2
+    updatedReplicas: 2
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","k8s-app":"kube-dns-autoscaler","kubernetes.io/cluster-service":"true"},"name":"kube-dns-autoscaler","namespace":"kube-system"},"spec":{"selector":{"matchLabels":{"k8s-app":"kube-dns-autoscaler"}},"template":{"metadata":{"annotations":{"seccomp.security.alpha.kubernetes.io/pod":"docker/default"},"labels":{"k8s-app":"kube-dns-autoscaler"}},"spec":{"containers":[{"command":["/cluster-proportional-autoscaler","--namespace=kube-system","--configmap=kube-dns-autoscaler","--target=Deployment/kube-dns","--default-params={\"linear\":{\"coresPerReplica\":256,\"nodesPerReplica\":16,\"preventSinglePointFailure\":true}}","--logtostderr=true","--v=2"],"image":"gke.gcr.io/cluster-proportional-autoscaler-amd64:1.7.1-gke.0","name":"autoscaler","resources":{"requests":{"cpu":"20m","memory":"10Mi"}}}],"nodeSelector":{"beta.kubernetes.io/os":"linux"},"priorityClassName":"system-cluster-critical","securityContext":{"fsGroup":65534,"supplementalGroups":[65534]},"serviceAccountName":"kube-dns-autoscaler","tolerations":[{"key":"CriticalAddonsOnly","operator":"Exists"}]}}}}
+    creationTimestamp: "2020-08-10T09:20:48Z"
+    generation: 1
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: kube-dns-autoscaler
+      kubernetes.io/cluster-service: "true"
+    name: kube-dns-autoscaler
+    namespace: kube-system
+    resourceVersion: "684"
+    selfLink: /apis/apps/v1/namespaces/kube-system/deployments/kube-dns-autoscaler
+    uid: 6e95187a-ca16-4385-8163-1f87e56280af
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        k8s-app: kube-dns-autoscaler
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          seccomp.security.alpha.kubernetes.io/pod: docker/default
+        creationTimestamp: null
+        labels:
+          k8s-app: kube-dns-autoscaler
+      spec:
+        containers:
+        - command:
+          - /cluster-proportional-autoscaler
+          - --namespace=kube-system
+          - --configmap=kube-dns-autoscaler
+          - --target=Deployment/kube-dns
+          - --default-params={"linear":{"coresPerReplica":256,"nodesPerReplica":16,"preventSinglePointFailure":true}}
+          - --logtostderr=true
+          - --v=2
+          image: gke.gcr.io/cluster-proportional-autoscaler-amd64:1.7.1-gke.0
+          imagePullPolicy: IfNotPresent
+          name: autoscaler
+          resources:
+            requests:
+              cpu: 20m
+              memory: 10Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          beta.kubernetes.io/os: linux
+        priorityClassName: system-cluster-critical
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext:
+          fsGroup: 65534
+          supplementalGroups:
+          - 65534
+        serviceAccount: kube-dns-autoscaler
+        serviceAccountName: kube-dns-autoscaler
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2020-08-10T09:21:05Z"
+      lastUpdateTime: "2020-08-10T09:21:05Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2020-08-10T09:20:48Z"
+      lastUpdateTime: "2020-08-10T09:21:05Z"
+      message: ReplicaSet "kube-dns-autoscaler-645f7d66cf" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "1"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","k8s-app":"glbc","kubernetes.io/cluster-service":"true","kubernetes.io/name":"GLBC"},"name":"l7-default-backend","namespace":"kube-system"},"spec":{"selector":{"matchLabels":{"k8s-app":"glbc"}},"template":{"metadata":{"annotations":{"seccomp.security.alpha.kubernetes.io/pod":"docker/default"},"labels":{"k8s-app":"glbc","name":"glbc"}},"spec":{"containers":[{"image":"k8s.gcr.io/ingress-gce-404-server-with-metrics-amd64:v1.6.0","livenessProbe":{"httpGet":{"path":"/healthz","port":8080,"scheme":"HTTP"},"initialDelaySeconds":30,"timeoutSeconds":5},"name":"default-http-backend","ports":[{"containerPort":8080}],"resources":{"limits":{"cpu":"10m","memory":"20Mi"},"requests":{"cpu":"10m","memory":"20Mi"}}}]}}}}
+    creationTimestamp: "2020-08-10T09:20:48Z"
+    generation: 1
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: glbc
+      kubernetes.io/cluster-service: "true"
+      kubernetes.io/name: GLBC
+    name: l7-default-backend
+    namespace: kube-system
+    resourceVersion: "858"
+    selfLink: /apis/apps/v1/namespaces/kube-system/deployments/l7-default-backend
+    uid: 7d07cb06-e7f6-4776-8d52-e75f50e137b9
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        k8s-app: glbc
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          seccomp.security.alpha.kubernetes.io/pod: docker/default
+        creationTimestamp: null
+        labels:
+          k8s-app: glbc
+          name: glbc
+      spec:
+        containers:
+        - image: k8s.gcr.io/ingress-gce-404-server-with-metrics-amd64:v1.6.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /healthz
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: default-http-backend
+          ports:
+          - containerPort: 8080
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 10m
+              memory: 20Mi
+            requests:
+              cpu: 10m
+              memory: 20Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2020-08-10T09:21:23Z"
+      lastUpdateTime: "2020-08-10T09:21:23Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2020-08-10T09:20:48Z"
+      lastUpdateTime: "2020-08-10T09:21:23Z"
+      message: ReplicaSet "l7-default-backend-678889f899" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 1
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","k8s-app":"metrics-server","kubernetes.io/cluster-service":"true","version":"v0.3.6"},"name":"metrics-server-v0.3.6","namespace":"kube-system"},"spec":{"selector":{"matchLabels":{"k8s-app":"metrics-server","version":"v0.3.6"}},"template":{"metadata":{"annotations":{"seccomp.security.alpha.kubernetes.io/pod":"docker/default"},"labels":{"k8s-app":"metrics-server","version":"v0.3.6"},"name":"metrics-server"},"spec":{"containers":[{"command":["/metrics-server","--metric-resolution=30s","--kubelet-port=10255","--deprecated-kubelet-completely-insecure=true","--kubelet-preferred-address-types=InternalIP,Hostname,InternalDNS,ExternalDNS,ExternalIP"],"image":"k8s.gcr.io/metrics-server-amd64:v0.3.6","name":"metrics-server","ports":[{"containerPort":443,"name":"https","protocol":"TCP"}]},{"command":["/pod_nanny","--config-dir=/etc/config","--cpu=40m","--extra-cpu=0.5m","--memory=35Mi","--extra-memory=4Mi","--threshold=5","--deployment=metrics-server-v0.3.6","--container=metrics-server","--poll-period=300000","--estimator=exponential","--scale-down-delay=24h","--minClusterSize=5"],"env":[{"name":"MY_POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"MY_POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}],"image":"gke.gcr.io/addon-resizer:1.8.8-gke.0","name":"metrics-server-nanny","resources":{"limits":{"cpu":"100m","memory":"300Mi"},"requests":{"cpu":"5m","memory":"50Mi"}},"volumeMounts":[{"mountPath":"/etc/config","name":"metrics-server-config-volume"}]}],"nodeSelector":{"kubernetes.io/os":"linux"},"priorityClassName":"system-cluster-critical","serviceAccountName":"metrics-server","tolerations":[{"key":"CriticalAddonsOnly","operator":"Exists"}],"volumes":[{"configMap":{"name":"metrics-server-config"},"name":"metrics-server-config-volume"}]}}}}
+    creationTimestamp: "2020-08-10T09:20:49Z"
+    generation: 2
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      k8s-app: metrics-server
+      kubernetes.io/cluster-service: "true"
+      version: v0.3.6
+    name: metrics-server-v0.3.6
+    namespace: kube-system
+    resourceVersion: "793"
+    selfLink: /apis/apps/v1/namespaces/kube-system/deployments/metrics-server-v0.3.6
+    uid: f4242cb5-b941-41bc-b0c5-7573ca9654b7
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        k8s-app: metrics-server
+        version: v0.3.6
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          seccomp.security.alpha.kubernetes.io/pod: docker/default
+        creationTimestamp: null
+        labels:
+          k8s-app: metrics-server
+          version: v0.3.6
+        name: metrics-server
+      spec:
+        containers:
+        - command:
+          - /metrics-server
+          - --metric-resolution=30s
+          - --kubelet-port=10255
+          - --deprecated-kubelet-completely-insecure=true
+          - --kubelet-preferred-address-types=InternalIP,Hostname,InternalDNS,ExternalDNS,ExternalIP
+          image: k8s.gcr.io/metrics-server-amd64:v0.3.6
+          imagePullPolicy: IfNotPresent
+          name: metrics-server
+          ports:
+          - containerPort: 443
+            name: https
+            protocol: TCP
+          resources:
+            limits:
+              cpu: 43m
+              memory: 55Mi
+            requests:
+              cpu: 43m
+              memory: 55Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        - command:
+          - /pod_nanny
+          - --config-dir=/etc/config
+          - --cpu=40m
+          - --extra-cpu=0.5m
+          - --memory=35Mi
+          - --extra-memory=4Mi
+          - --threshold=5
+          - --deployment=metrics-server-v0.3.6
+          - --container=metrics-server
+          - --poll-period=300000
+          - --estimator=exponential
+          - --scale-down-delay=24h
+          - --minClusterSize=5
+          env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          image: gke.gcr.io/addon-resizer:1.8.8-gke.0
+          imagePullPolicy: IfNotPresent
+          name: metrics-server-nanny
+          resources:
+            limits:
+              cpu: 100m
+              memory: 300Mi
+            requests:
+              cpu: 5m
+              memory: 50Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/config
+            name: metrics-server-config-volume
+        dnsPolicy: ClusterFirst
+        nodeSelector:
+          kubernetes.io/os: linux
+        priorityClassName: system-cluster-critical
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: metrics-server
+        serviceAccountName: metrics-server
+        terminationGracePeriodSeconds: 30
+        tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: metrics-server-config
+          name: metrics-server-config-volume
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2020-08-10T09:21:09Z"
+      lastUpdateTime: "2020-08-10T09:21:09Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2020-08-10T09:20:49Z"
+      lastUpdateTime: "2020-08-10T09:21:15Z"
+      message: ReplicaSet "metrics-server-v0.3.6-7b7d6c7576" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"addonmanager.kubernetes.io/mode":"Reconcile","app":"stackdriver-metadata-agent","kubernetes.io/cluster-service":"true"},"name":"stackdriver-metadata-agent-cluster-level","namespace":"kube-system"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"stackdriver-metadata-agent","cluster-level":"true"}},"strategy":{"rollingUpdate":{"maxUnavailable":1},"type":"RollingUpdate"},"template":{"metadata":{"annotations":{"components.gke.io/component-name":"stackdriver-metadata-agent","components.gke.io/component-version":"1.1.2"},"labels":{"app":"stackdriver-metadata-agent","cluster-level":"true"}},"spec":{"containers":[{"args":["-logtostderr","-v=1"],"env":[{"name":"CLUSTER_NAME","value":"logging"},{"name":"CLUSTER_LOCATION","value":"us-central1-c"},{"name":"IGNORED_RESOURCES","value":"replicasets.v1.apps,replicasets.v1beta1.extensions"}],"image":"gcr.io/stackdriver-agents/metadata-agent-go:1.2.0","imagePullPolicy":"IfNotPresent","name":"metadata-agent","terminationMessagePath":"/dev/termination-log","terminationMessagePolicy":"File","volumeMounts":[{"mountPath":"/etc/ssl/certs","name":"ssl-certs"}]},{"command":["/pod_nanny","--config-dir=/etc/config","--cpu=40m","--extra-cpu=0.5m","--memory=80Mi","--extra-memory=2Mi","--threshold=5","--deployment=stackdriver-metadata-agent-cluster-level","--container=metadata-agent","--poll-period=300000","--estimator=exponential","--minClusterSize=16","--use-metrics=true"],"env":[{"name":"MY_POD_NAME","valueFrom":{"fieldRef":{"fieldPath":"metadata.name"}}},{"name":"MY_POD_NAMESPACE","valueFrom":{"fieldRef":{"fieldPath":"metadata.namespace"}}}],"image":"gke.gcr.io/addon-resizer:1.8.10-gke.0","name":"metadata-agent-nanny","resources":{"limits":{"memory":"90Mi"},"requests":{"cpu":"50m","memory":"90Mi"}},"volumeMounts":[{"mountPath":"/etc/config","name":"metadata-agent-config-volume"}]}],"dnsPolicy":"ClusterFirst","priorityClassName":"system-cluster-critical","restartPolicy":"Always","schedulerName":"default-scheduler","securityContext":{},"serviceAccountName":"metadata-agent","terminationGracePeriodSeconds":5,"tolerations":[{"key":"CriticalAddonsOnly","operator":"Exists"},{"key":"components.gke.io/gke-managed-components","operator":"Exists"}],"volumes":[{"hostPath":{"path":"/etc/ssl/certs","type":"Directory"},"name":"ssl-certs"},{"configMap":{"name":"metadata-agent-config"},"name":"metadata-agent-config-volume"}]}}}}
+    creationTimestamp: "2020-08-10T09:20:48Z"
+    generation: 2
+    labels:
+      addonmanager.kubernetes.io/mode: Reconcile
+      app: stackdriver-metadata-agent
+      kubernetes.io/cluster-service: "true"
+    name: stackdriver-metadata-agent-cluster-level
+    namespace: kube-system
+    resourceVersion: "874"
+    selfLink: /apis/apps/v1/namespaces/kube-system/deployments/stackdriver-metadata-agent-cluster-level
+    uid: 33aab620-6589-4262-9473-922e4b628934
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: stackdriver-metadata-agent
+        cluster-level: "true"
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 1
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          components.gke.io/component-name: stackdriver-metadata-agent
+          components.gke.io/component-version: 1.1.2
+        creationTimestamp: null
+        labels:
+          app: stackdriver-metadata-agent
+          cluster-level: "true"
+      spec:
+        containers:
+        - args:
+          - -logtostderr
+          - -v=1
+          env:
+          - name: CLUSTER_NAME
+            value: logging
+          - name: CLUSTER_LOCATION
+            value: us-central1-c
+          - name: IGNORED_RESOURCES
+            value: replicasets.v1.apps,replicasets.v1beta1.extensions
+          image: gcr.io/stackdriver-agents/metadata-agent-go:1.2.0
+          imagePullPolicy: IfNotPresent
+          name: metadata-agent
+          resources:
+            limits:
+              cpu: 48m
+              memory: 112Mi
+            requests:
+              cpu: 48m
+              memory: 112Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/ssl/certs
+            name: ssl-certs
+        - command:
+          - /pod_nanny
+          - --config-dir=/etc/config
+          - --cpu=40m
+          - --extra-cpu=0.5m
+          - --memory=80Mi
+          - --extra-memory=2Mi
+          - --threshold=5
+          - --deployment=stackdriver-metadata-agent-cluster-level
+          - --container=metadata-agent
+          - --poll-period=300000
+          - --estimator=exponential
+          - --minClusterSize=16
+          - --use-metrics=true
+          env:
+          - name: MY_POD_NAME
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.name
+          - name: MY_POD_NAMESPACE
+            valueFrom:
+              fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+          image: gke.gcr.io/addon-resizer:1.8.10-gke.0
+          imagePullPolicy: IfNotPresent
+          name: metadata-agent-nanny
+          resources:
+            limits:
+              memory: 90Mi
+            requests:
+              cpu: 50m
+              memory: 90Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /etc/config
+            name: metadata-agent-config-volume
+        dnsPolicy: ClusterFirst
+        priorityClassName: system-cluster-critical
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: metadata-agent
+        serviceAccountName: metadata-agent
+        terminationGracePeriodSeconds: 5
+        tolerations:
+        - key: CriticalAddonsOnly
+          operator: Exists
+        - key: components.gke.io/gke-managed-components
+          operator: Exists
+        volumes:
+        - hostPath:
+            path: /etc/ssl/certs
+            type: Directory
+          name: ssl-certs
+        - configMap:
+            defaultMode: 420
+            name: metadata-agent-config
+          name: metadata-agent-config-volume
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2020-08-10T09:20:48Z"
+      lastUpdateTime: "2020-08-10T09:20:48Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    - lastTransitionTime: "2020-08-10T09:20:48Z"
+      lastUpdateTime: "2020-08-10T09:21:26Z"
+      message: ReplicaSet "stackdriver-metadata-agent-cluster-level-5cd69855f4" has
+        successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""
+  selfLink: ""
