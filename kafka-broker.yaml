@@ -5,10 +5,11 @@ metadata:
   namespace: logging
   name: kafka-broker0
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: kafka
+      id: "0"
   template:
     metadata:
       labels:
@@ -22,9 +23,9 @@ spec:
         - containerPort: 9092
         env:
         - name: KAFKA_ADVERTISED_PORT
-          value: "32367"
+          value: "31098"
         - name: KAFKA_ADVERTISED_HOST_NAME
-          value: 104.197.166.171
+          value: 35.222.173.235
         - name: KAFKA_ZOOKEEPER_CONNECT
           value: zoo1:2181
         - name: KAFKA_BROKER_ID
