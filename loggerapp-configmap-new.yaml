@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: loggingappconfigmap
+  namespace: "kube-system"
+data:
+  fluent_conf: |
+    @include kubernetes.conf
+      #@type kafka_buffered
+      #brokers             dla-aeuddkb001.walgreens.com:9092
+      #default_topic         dev-eapi-connectivity_test-logging
+      #output_data_type      json
+      #output_include_tag    true
+      #output_include_time   true
+      #get_kafka_client_log  false
